@@ -1,0 +1,8 @@
+Project: 3-4 Jon group
+Title: Project Title/Name
+Requirement: What you are going to develop
+Implement: django,sqlite/mysql, react/jauery, templete
+Test/QA
+Git commit individual
+Submit
+
