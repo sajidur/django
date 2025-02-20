@@ -5,4 +5,5 @@ Implement: django,sqlite/mysql, react/jauery, templete
 Test/QA
 Git commit individual
 Submit
+Deadline: 28 Feb 2025
 
