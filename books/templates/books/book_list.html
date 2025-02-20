@@ -4,34 +4,93 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book List</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <h1>Book List</h1>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Author</th>
-                <th>Published Date</th>
-                <th>ISBN</th>
-                <th>Price</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for book in books %}
-                <tr>
-                    <td><strong>{{ book.title }}</strong></td>
-                    <td>{{ book.author }}</td>
-                    <td>{{ book.published_date }}</td>
-                    <td>{{ book.isbn }}</td>
-                    <td>${{ book.price }}</td>
-                </tr>
-            {% empty %}
-                <tr>
-                    <td colspan="5">No books available.</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<body class="bg-gray-100 p-6">
+    <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-lg">
+        <h1 class="text-2xl font-bold mb-4 text-center">Book List</h1>
+        <div class="overflow-x-auto">
+            <table class="w-full border-collapse border border-gray-300">
+                <thead>
+                    <tr class="bg-gray-200">
+                        <th class="border p-2">Title</th>
+                        <th class="border p-2">Author</th>
+                        <th class="border p-2">Published Date</th>
+                        <th class="border p-2">ISBN</th>
+                        <th class="border p-2">Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for book in books %}
+                        <tr class="text-center">
+                            <td class="border p-2 font-semibold">{{ book.title }}</td>
+                            <td class="border p-2">{{ book.author }}</td>
+                            <td class="border p-2">{{ book.published_date }}</td>
+                            <td class="border p-2">{{ book.isbn }}</td>
+                            <td class="border p-2">${{ book.price }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5" class="border p-2 text-center">No books available.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="max-w-4xl mx-auto mt-6 bg-white p-6 rounded-lg shadow-lg">
+        <h1 class="text-2xl font-bold mb-4 text-center">Data from API</h1>
+        <button id="load-books" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition">Load Books</button>
+        <div class="overflow-x-auto mt-4">
+            <table class="w-full border-collapse border border-gray-300">
+                <thead>
+                    <tr class="bg-gray-200">
+                        <th class="border p-2">Title</th>
+                        <th class="border p-2">Author</th>
+                        <th class="border p-2">Published Date</th>
+                        <th class="border p-2">ISBN</th>
+                        <th class="border p-2">Price</th>
+                    </tr>
+                </thead>
+                <tbody id="book-table-body">
+                    <tr>
+                        <td colspan="5" class="border p-2 text-center">Click "Load Books" to fetch data.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function fetchBooks() {
+            fetch("http://localhost:8000/books/api/") // Replace with actual API endpoint
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    const tbody = document.getElementById("book-table-body");
+                    tbody.innerHTML = "";
+                    if (data.length > 0) {
+                        data.forEach(book => {
+                            const row = `<tr class='text-center'>
+                                <td class='border p-2 font-semibold'>${book.title}</td>
+                                <td class='border p-2'>${book.author}</td>
+                                <td class='border p-2'>${book.published_date}</td>
+                                <td class='border p-2'>${book.isbn}</td>
+                                <td class='border p-2'>$${book.price}</td>
+                            </tr>`;
+                            tbody.innerHTML += row;
+                        });
+                    } else {
+                        tbody.innerHTML = `<tr><td colspan='5' class='border p-2 text-center'>No books available.</td></tr>`;
+                    }
+                })
+                .catch(error => console.error("Error fetching books:", error));
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            document.getElementById("load-books").addEventListener("click", fetchBooks);
+        });
+    </script>
 </body>
 </html>
